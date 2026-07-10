@@ -1,5 +1,5 @@
 """
-Trout-slap Discord bot.
+CONTAINS AI-GENERATED CONTENT
 
 Commands:
   /trout [target]         - whacks target (or you) with a wet trout, subject to a per-user cooldown
