@@ -27,7 +27,7 @@ TOKEN = os.environ["DISCORD_BOT_TOKEN"]
 
 # URL of the trout image. Easiest option: upload the image to any channel in
 # your server once, right-click it, "Copy Link", and paste that link here.
-TROUT_IMAGE_URL = "https://media.discordapp.net/attachments/1510316567357816842/1524867320424435873/250px-Rainbow_trout_transparent.png?ex=6a52a05b&is=6a514edb&hm=1e1c577d6a6db51062f615c846c3cc22d2f1fc1ea9eeac39be8b6dffa75b9379&=&format=webp&quality=lossless&width=375&height=375"
+TROUT_IMAGE_URL = "https://media.discordapp.net/attachments/1510316567357816842/1524867320424435873/250px-Rainbow_trout_transparent.png"
 
 CONFIG_FILE = "config.json"
 
@@ -121,7 +121,7 @@ async def trout(
         return
 
     # --- "whack" style (default): embed with image ---
-    embed = discord.Embed(title="Whack!", description="You've been whacked with a wet trout!")
+    embed = discord.Embed(title="# *Whack!*", description="You've been whacked with a wet trout!")
     embed.set_image(url=TROUT_IMAGE_URL)
 
     # Optional tagging: if a target was given, mention them above the embed.
