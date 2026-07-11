@@ -27,7 +27,7 @@ TOKEN = os.environ["DISCORD_BOT_TOKEN"]
 
 # URL of the trout image. Easiest option: upload the image to any channel in
 # your server once, right-click it, "Copy Link", and paste that link here.
-TROUT_IMAGE_URL = "https://example.com/replace-with-your-trout-image-url.jpg"
+TROUT_IMAGE_URL = "https://github.com/some-amoeba/troutbot/blob/main/trout.png?raw=true"
 
 CONFIG_FILE = "config.json"
 
