@@ -1,9 +1,9 @@
 """
-CONTAINS AI-GENERATED CONTENT
+Trout-slap Discord bot.
 
 Commands:
   /trout [target]         - whacks target (or you) with a wet trout, subject to a per-user cooldown
-  /trout-cooldown <secs>  - (Administrator permission required) changes the cooldown length for everyone
+  /trout-cooldown <secs>  - (Manage Server permission required) changes the cooldown length for everyone
 
 Setup steps are in README.md.
 """
@@ -27,7 +27,7 @@ TOKEN = os.environ["DISCORD_BOT_TOKEN"]
 
 # URL of the trout image. Easiest option: upload the image to any channel in
 # your server once, right-click it, "Copy Link", and paste that link here.
-TROUT_IMAGE_URL = "https://github.com/some-amoeba/troutbot/blob/main/trout.png?raw=true"
+TROUT_IMAGE_URL = "https://example.com/replace-with-your-trout-image-url.jpg"
 
 CONFIG_FILE = "config.json"
 
@@ -75,8 +75,21 @@ async def on_ready():
 # ---------------------------------------------------------------------------
 
 @bot.tree.command(name="trout", description="Whack someone with a wet trout")
-@app_commands.describe(target="Who to whack (optional -- leave blank to whack yourself)")
-async def trout(interaction: discord.Interaction, target: discord.Member | None = None):
+@app_commands.describe(
+    target="Who to whack (optional -- leave blank to whack yourself)",
+    style="How to deliver it: embed image, or classic text-only slap",
+)
+@app_commands.choices(
+    style=[
+        app_commands.Choice(name="Whack (embed with image)", value="whack"),
+        app_commands.Choice(name="Slap (classic text-only)", value="slap"),
+    ]
+)
+async def trout(
+    interaction: discord.Interaction,
+    target: discord.Member | None = None,
+    style: app_commands.Choice[str] | None = None,
+):
     user_id = interaction.user.id
     now = time.time()
 
@@ -96,7 +109,18 @@ async def trout(interaction: discord.Interaction, target: discord.Member | None 
     # Passed the cooldown check -- record this use.
     last_used[user_id] = now
 
-    # --- Build the response ---
+    style_value = style.value if style else "whack"
+
+    if style_value == "slap":
+        # Classic IRC-style slap. If no target was given, the actor slaps themselves.
+        actor = interaction.user.mention
+        victim = target.mention if target else interaction.user.mention
+        await interaction.response.send_message(
+            f"*{actor} slaps {victim} around a bit with a large trout*"
+        )
+        return
+
+    # --- "whack" style (default): embed with image ---
     embed = discord.Embed(title="Whack!", description="You've been whacked with a wet trout!")
     embed.set_image(url=TROUT_IMAGE_URL)
 
@@ -112,7 +136,7 @@ async def trout(interaction: discord.Interaction, target: discord.Member | None 
 
 @bot.tree.command(name="trout-cooldown", description="Set the trout cooldown (in seconds) for everyone")
 @app_commands.describe(seconds="New cooldown length in seconds")
-@app_commands.checks.has_permissions(administrator=True)
+@app_commands.checks.has_permissions(manage_guild=True)
 async def trout_cooldown(interaction: discord.Interaction, seconds: int):
     global cooldown_seconds
 
@@ -129,7 +153,7 @@ async def trout_cooldown(interaction: discord.Interaction, seconds: int):
 async def trout_cooldown_error(interaction: discord.Interaction, error: app_commands.AppCommandError):
     if isinstance(error, app_commands.MissingPermissions):
         await interaction.response.send_message(
-            "You need the 'Administrator' permission to change the cooldown.",
+            "You need the 'Manage Server' permission to change the cooldown.",
             ephemeral=True,
         )
     else:
